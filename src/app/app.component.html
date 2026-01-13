@@ -38,7 +38,7 @@
 <div class="flex h-screen overflow-hidden bg-gray-100 min-w-0">
   <app-sidebar
     class="h-full col transition-all duration-300"
-    [style.padding-top]="!isScrolled() ? '152px' : '64px'"
+    [style.padding-top]="!isScrolled() ? '96px' : '64px'"
   >
   </app-sidebar>
 
@@ -46,7 +46,7 @@
     <main
       (scroll)="onContentScroll($event)"
       class="flex-1 overflow-x-hidden overflow-y-auto transition-all duration-300"
-      [style.padding-top]="!isScrolled() ? '152px' : '64px'"
+      [style.padding-top]="!isScrolled() ? '96px' : '64px'"
     >
       <div class="container mx-auto px-4 py-8">
         <router-outlet />
