@@ -23,6 +23,7 @@ import { NAVIGATION_TEXTS } from '@assets/language/navigation.text';
 
 import { NavigationService } from '@core/services/navigation.service';
 import { HeaderService } from '@core/services/header.service';
+import { getLabelOverride } from '@core/services/ui-settings';
 
 @Component({
   selector: 'app-header',
@@ -203,7 +204,19 @@ export class HeaderComponent implements OnInit {
   }
 
   translateNav(key: string): string {
+    const lookupKey = key === 'report_dashboard' ? 'report' : key;
+    const override = getLabelOverride(lookupKey);
+    if (override) {
+      return override;
+    }
     return NAVIGATION_TEXTS[this.currentLanguage.code][key] || key;
+  }
+
+  goToSettings(): void {
+    this.navigationService.setActivePrimaryNavItem('setting');
+    this.navigationService.setSidebarExpanded(true);
+    this.router.navigate(['/setting/user-accounts/data']);
+    this.isProfileDropdownOpen = false;
   }
 
   private getPrimaryRoute(key: string): string | null {

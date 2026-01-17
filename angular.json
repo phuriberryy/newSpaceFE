@@ -25,11 +25,12 @@
               "src/favicon.ico",
               "src/assets"
             ],
-"styles": [
-  "src/styles/styles.css",
-  "node_modules/primeicons/primeicons.css",
-  "src/styles/primeng-overrides.css"
-],
+            "styles": [
+              "src/styles/styles.css",
+              "primeicons/primeicons.css",
+              "src/styles/primeng-overrides.css",
+              "src/styles/table.css"
+            ],
 
             "scripts": []
           },
@@ -89,7 +90,10 @@
               }
             ],
             "styles": [
-              "src/styles/styles.css"
+              "src/styles/styles.css",
+              "primeicons/primeicons.css",
+              "src/styles/primeng-overrides.css",
+              "src/styles/table.css"
             ],
             "scripts": []
           }

@@ -7,7 +7,7 @@ import { Routes } from '@angular/router';
 export const SALES_ROUTES: Routes = [
   {
     path: '',
-    redirectTo: '/dashboard/overview',
+    redirectTo: 'dashboard',
     pathMatch: 'full',
   },
   {

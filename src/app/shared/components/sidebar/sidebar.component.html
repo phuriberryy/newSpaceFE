@@ -1,5 +1,5 @@
 <aside
-  class="bg-gradient-to-b from-sidebar-main via-header-primary to-header-gradient-end text-white-primary h-full flex flex-col transition-all duration-[300ms] ease-in-out"
+  class="bg-gradient-to-b from-primary via-primary to-secondary text-primary-foreground h-full flex flex-col transition-all duration-[300ms] ease-in-out"
   [class.w-72]="isExpanded() || isHovering"
   [class.w-20]="!isExpanded() && !isHovering"
   (mouseenter)="onMouseEnter()"
@@ -15,7 +15,7 @@
       (click)="handleDirectLinkClick()"
       class="group flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-white/10 relative"
       [class.border-r-4]="!isExpanded() && !isHovering && isItemActive(item)"
-      [class.border-sidebar-accent]="!isExpanded() && !isHovering && isItemActive(item)"
+      [class.border-secondary]="!isExpanded() && !isHovering && isItemActive(item)"
       [class.bg-white/15]="isItemHighlighted(item)"
       [class.shadow-md]="isItemHighlighted(item)"
     >
@@ -40,8 +40,8 @@
         <span
           class="font-medium text-sm whitespace-nowrap transition-colors duration-200 drop-shadow-md"
           [ngClass]="{
-            'text-white-primary': isItemHighlighted(item),
-            'text-white-primary/80 group-hover:text-white-primary': !isItemHighlighted(item)
+            'text-primary-foreground': isItemHighlighted(item),
+            'text-primary-foreground/80 group-hover:text-primary-foreground': !isItemHighlighted(item)
           }"
         >
           {{ translate(item.name) }}
@@ -55,7 +55,7 @@
     <div
       class="group flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all duration-200 hover:bg-white/10 relative"
       [class.border-r-4]="!isExpanded() && !isHovering && isItemActive(item)"
-      [class.border-sidebar-accent]="!isExpanded() && !isHovering && isItemActive(item)"
+      [class.border-secondary]="!isExpanded() && !isHovering && isItemActive(item)"
       [class.bg-white/15]="isItemHighlighted(item)"
       [class.shadow-md]="isItemHighlighted(item)"
       (click)="handleItemClick(item.name)"
@@ -81,8 +81,8 @@
         <span
           class="font-medium text-sm whitespace-nowrap transition-colors duration-200 drop-shadow-md"
           [ngClass]="{
-            'text-white-primary': isItemHighlighted(item),
-            'text-white-primary/80 group-hover:text-white-primary': !isItemHighlighted(item)
+            'text-primary-foreground': isItemHighlighted(item),
+            'text-primary-foreground/80 group-hover:text-primary-foreground': !isItemHighlighted(item)
           }"
         >
           {{ translate(item.name) }}
@@ -106,9 +106,9 @@
           <a
             [routerLink]="subItem.route"
             (click)="onSubItemClick(subItem)"
-            class="block py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-150 text-white-primary/80 hover:bg-white/10 hover:text-white-primary"
+            class="block py-2 px-3 rounded-lg text-sm font-medium transition-colors duration-150 text-primary-foreground/80 hover:bg-white/10 hover:text-primary-foreground"
             [ngClass]="{
-              'bg-white/15 text-white-primary shadow-md': activeSubRoute() === subItem.route
+              'bg-white/15 text-primary-foreground shadow-md': activeSubRoute() === subItem.route
             }"
           >
             {{ translate(subItem.name) }}

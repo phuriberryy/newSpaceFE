@@ -34,7 +34,7 @@ header {
 /* Header nav card style */
 .header-nav-item {
   align-items: center;
-  color: #ffffff;
+  color: rgb(var(--primary-foreground));
   cursor: pointer;
   display: flex;
   flex-direction: column;

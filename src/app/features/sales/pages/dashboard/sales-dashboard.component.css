@@ -2,9 +2,9 @@
 
 /* ==================== CONTAINER ==================== */
 .sales-dashboard-container {
-  max-width: 1600px;
+  max-width: var(--content-max);
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: var(--content-padding);
   background-color: #f8f9fa;
   min-height: 100vh;
 }
@@ -206,8 +206,8 @@
 
 .card-badge {
   padding: 0.25rem 0.75rem;
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: rgb(var(--warning) / 0.18);
+  color: rgb(var(--warning));
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 600;
