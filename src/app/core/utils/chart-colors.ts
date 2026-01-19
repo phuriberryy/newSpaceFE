@@ -86,47 +86,57 @@ export const getStatusPaletteWithAlpha = (alpha: number): StatusPalette => ({
 });
 
 export const getChartPalette = (count: number): string[] => {
-  const palette = [
-    getColorFromVar('--primary', DEFAULT_CHART_PALETTE[0]),
-    getColorFromVar('--secondary', DEFAULT_CHART_PALETTE[1]),
-    getColorFromVar('--info', DEFAULT_CHART_PALETTE[2]),
-    getColorFromVar('--warning', DEFAULT_CHART_PALETTE[3]),
-    getColorFromVar('--success', DEFAULT_CHART_PALETTE[4]),
-    getColorFromVar('--danger', DEFAULT_CHART_PALETTE[5]),
-  ];
-
   if (count <= 0) {
     return [];
   }
+
+  const primary = getColorFromVar('--primary', DEFAULT_CHART_PALETTE[0]);
+  const secondary = getColorFromVar('--secondary', DEFAULT_CHART_PALETTE[1]);
+  const status = getStatusPalette();
+
+  const palette =
+    count <= 2
+      ? [primary, secondary]
+      : [
+          status.success,
+          status.warning,
+          status.danger,
+          status.info,
+          primary,
+          secondary,
+        ];
 
   return Array.from({ length: count }, (_, index) => palette[index % palette.length]);
 };
 
 export const getChartPaletteWithAlpha = (count: number, alpha: number): string[] => {
-  const palette = [
-    getColorFromVarWithAlpha(
-      '--primary',
-      alpha,
-      `rgba(22, 119, 255, ${alpha})`,
-    ),
-    getColorFromVarWithAlpha(
-      '--secondary',
-      alpha,
-      `rgba(56, 189, 248, ${alpha})`,
-    ),
-    getColorFromVarWithAlpha('--info', alpha, `rgba(59, 130, 246, ${alpha})`),
-    getColorFromVarWithAlpha(
-      '--warning',
-      alpha,
-      `rgba(245, 158, 11, ${alpha})`,
-    ),
-    getColorFromVarWithAlpha('--success', alpha, `rgba(34, 197, 94, ${alpha})`),
-    getColorFromVarWithAlpha('--danger', alpha, `rgba(239, 68, 68, ${alpha})`),
-  ];
-
   if (count <= 0) {
     return [];
   }
+
+  const primary = getColorFromVarWithAlpha(
+    '--primary',
+    alpha,
+    `rgba(22, 119, 255, ${alpha})`,
+  );
+  const secondary = getColorFromVarWithAlpha(
+    '--secondary',
+    alpha,
+    `rgba(56, 189, 248, ${alpha})`,
+  );
+  const status = getStatusPaletteWithAlpha(alpha);
+
+  const palette =
+    count <= 2
+      ? [primary, secondary]
+      : [
+          status.success,
+          status.warning,
+          status.danger,
+          status.info,
+          primary,
+          secondary,
+        ];
 
   return Array.from({ length: count }, (_, index) => palette[index % palette.length]);
 };
