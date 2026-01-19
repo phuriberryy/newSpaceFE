@@ -1,5 +1,6 @@
 export type UiThemeMode = 'light' | 'dark';
 export type UiPaletteMode = 'preset' | 'custom';
+export type UiStatusMode = 'preset' | 'custom';
 export type UiIconStyle = 'outline' | 'solid';
 
 export interface UiTokens {
@@ -24,10 +25,23 @@ export interface UiTokens {
   link: string;
 }
 
+export interface UiStatusTokens {
+  success: string;
+  successFg: string;
+  warning: string;
+  warningFg: string;
+  danger: string;
+  dangerFg: string;
+  info: string;
+  infoFg: string;
+}
+
 export interface UiConfig {
   themeMode: UiThemeMode;
   paletteMode: UiPaletteMode;
   activePresetId: string | null;
+  statusMode: UiStatusMode;
+  activeStatusPresetId: string | null;
   tokens: UiTokens;
   iconStyle: UiIconStyle;
   labels: Record<string, string>;
@@ -38,6 +52,12 @@ export interface UiPreset {
   name: string;
   light: UiTokens;
   dark: UiTokens;
+}
+
+export interface UiStatusPreset {
+  id: string;
+  name: string;
+  tokens: UiStatusTokens;
 }
 
 export const UI_SETTINGS_KEY = 'space_ui_config';
@@ -367,6 +387,144 @@ export const UI_PRESETS: UiPreset[] = [
     },
   },
   {
+    id: 'sunrise',
+    name: 'Sunrise',
+    light: {
+      bg: '#FFF8F1',
+      fg: '#2B1B12',
+      muted: '#8A6B5B',
+      border: '#F3E3D6',
+      card: '#FFFFFF',
+      input: '#FFFFFF',
+      primary: '#F97316',
+      primaryFg: '#FFFFFF',
+      secondary: '#FDBA74',
+      secondaryFg: '#3B1D0C',
+      success: '#22C55E',
+      successFg: '#052E16',
+      warning: '#F59E0B',
+      warningFg: '#451A03',
+      danger: '#EF4444',
+      dangerFg: '#450A0A',
+      info: '#FB7185',
+      infoFg: '#881337',
+      link: '#F97316',
+    },
+    dark: {
+      bg: '#1A0F0A',
+      fg: '#FCEFE6',
+      muted: '#D0B4A3',
+      border: '#2F1A12',
+      card: '#22140D',
+      input: '#22140D',
+      primary: '#FB923C',
+      primaryFg: '#1A0F0A',
+      secondary: '#FDBA74',
+      secondaryFg: '#1A0F0A',
+      success: '#34D399',
+      successFg: '#052E16',
+      warning: '#FBBF24',
+      warningFg: '#451A03',
+      danger: '#F87171',
+      dangerFg: '#450A0A',
+      info: '#FB7185',
+      infoFg: '#450A0A',
+      link: '#FB923C',
+    },
+  },
+  {
+    id: 'forest',
+    name: 'Forest',
+    light: {
+      bg: '#F6FBF8',
+      fg: '#102A22',
+      muted: '#5D756B',
+      border: '#DDEBE4',
+      card: '#FFFFFF',
+      input: '#FFFFFF',
+      primary: '#0F766E',
+      primaryFg: '#FFFFFF',
+      secondary: '#22C55E',
+      secondaryFg: '#052E16',
+      success: '#16A34A',
+      successFg: '#052E16',
+      warning: '#D97706',
+      warningFg: '#451A03',
+      danger: '#DC2626',
+      dangerFg: '#450A0A',
+      info: '#14B8A6',
+      infoFg: '#042F2E',
+      link: '#0F766E',
+    },
+    dark: {
+      bg: '#0B1A16',
+      fg: '#E5F4EE',
+      muted: '#92A59D',
+      border: '#163027',
+      card: '#10241E',
+      input: '#10241E',
+      primary: '#2DD4BF',
+      primaryFg: '#0B1220',
+      secondary: '#34D399',
+      secondaryFg: '#052E16',
+      success: '#22C55E',
+      successFg: '#052E16',
+      warning: '#F59E0B',
+      warningFg: '#451A03',
+      danger: '#F87171',
+      dangerFg: '#450A0A',
+      info: '#38BDF8',
+      infoFg: '#0B1220',
+      link: '#2DD4BF',
+    },
+  },
+  {
+    id: 'steel',
+    name: 'Steel',
+    light: {
+      bg: '#F5F7FA',
+      fg: '#111827',
+      muted: '#6B7280',
+      border: '#E5E7EB',
+      card: '#FFFFFF',
+      input: '#FFFFFF',
+      primary: '#0F172A',
+      primaryFg: '#FFFFFF',
+      secondary: '#64748B',
+      secondaryFg: '#FFFFFF',
+      success: '#16A34A',
+      successFg: '#052E16',
+      warning: '#F59E0B',
+      warningFg: '#451A03',
+      danger: '#EF4444',
+      dangerFg: '#450A0A',
+      info: '#1D4ED8',
+      infoFg: '#FFFFFF',
+      link: '#1D4ED8',
+    },
+    dark: {
+      bg: '#0B111A',
+      fg: '#E5E7EB',
+      muted: '#9CA3AF',
+      border: '#1F2937',
+      card: '#111827',
+      input: '#111827',
+      primary: '#94A3B8',
+      primaryFg: '#0B1220',
+      secondary: '#475569',
+      secondaryFg: '#E2E8F0',
+      success: '#22C55E',
+      successFg: '#052E16',
+      warning: '#F59E0B',
+      warningFg: '#451A03',
+      danger: '#F87171',
+      dangerFg: '#450A0A',
+      info: '#60A5FA',
+      infoFg: '#0B1220',
+      link: '#93C5FD',
+    },
+  },
+  {
     id: 'high-contrast',
     name: 'High Contrast',
     light: {
@@ -414,10 +572,113 @@ export const UI_PRESETS: UiPreset[] = [
   },
 ];
 
+export const UI_STATUS_PRESETS: UiStatusPreset[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    tokens: {
+      success: '#22C55E',
+      successFg: '#052E16',
+      warning: '#F59E0B',
+      warningFg: '#451A03',
+      danger: '#EF4444',
+      dangerFg: '#450A0A',
+      info: '#3B82F6',
+      infoFg: '#0B1220',
+    },
+  },
+  {
+    id: 'soft',
+    name: 'Soft',
+    tokens: {
+      success: '#86EFAC',
+      successFg: '#14532D',
+      warning: '#FCD34D',
+      warningFg: '#78350F',
+      danger: '#FCA5A5',
+      dangerFg: '#7F1D1D',
+      info: '#93C5FD',
+      infoFg: '#1E3A8A',
+    },
+  },
+  {
+    id: 'bold',
+    name: 'Bold',
+    tokens: {
+      success: '#10B981',
+      successFg: '#ECFDF5',
+      warning: '#F97316',
+      warningFg: '#FFF7ED',
+      danger: '#F43F5E',
+      dangerFg: '#FFF1F2',
+      info: '#0EA5E9',
+      infoFg: '#E0F2FE',
+    },
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset',
+    tokens: {
+      success: '#84CC16',
+      successFg: '#365314',
+      warning: '#F59E0B',
+      warningFg: '#78350F',
+      danger: '#FB7185',
+      dangerFg: '#881337',
+      info: '#38BDF8',
+      infoFg: '#0C4A6E',
+    },
+  },
+  {
+    id: 'aurora',
+    name: 'Aurora',
+    tokens: {
+      success: '#34D399',
+      successFg: '#064E3B',
+      warning: '#FCD34D',
+      warningFg: '#78350F',
+      danger: '#FB7185',
+      dangerFg: '#881337',
+      info: '#60A5FA',
+      infoFg: '#1E3A8A',
+    },
+  },
+  {
+    id: 'tropical',
+    name: 'Tropical',
+    tokens: {
+      success: '#2DD4BF',
+      successFg: '#042F2E',
+      warning: '#FDBA74',
+      warningFg: '#7C2D12',
+      danger: '#F43F5E',
+      dangerFg: '#FFF1F2',
+      info: '#0EA5E9',
+      infoFg: '#E0F2FE',
+    },
+  },
+  {
+    id: 'slate',
+    name: 'Slate',
+    tokens: {
+      success: '#4ADE80',
+      successFg: '#14532D',
+      warning: '#EAB308',
+      warningFg: '#713F12',
+      danger: '#F87171',
+      dangerFg: '#7F1D1D',
+      info: '#38BDF8',
+      infoFg: '#0C4A6E',
+    },
+  },
+];
+
 export const DEFAULT_UI_CONFIG: UiConfig = {
   themeMode: 'light',
   paletteMode: 'preset',
   activePresetId: 'space-blue',
+  statusMode: 'custom',
+  activeStatusPresetId: null,
   tokens: UI_PRESETS[0].light,
   iconStyle: 'outline',
   labels: {
@@ -458,6 +719,9 @@ export const loadUiConfig = (): UiConfig => {
         ...(parsed.labels || {}),
       },
       activePresetId: parsed.activePresetId ?? DEFAULT_UI_CONFIG.activePresetId,
+      statusMode: parsed.statusMode ?? DEFAULT_UI_CONFIG.statusMode,
+      activeStatusPresetId:
+        parsed.activeStatusPresetId ?? DEFAULT_UI_CONFIG.activeStatusPresetId,
     };
   } catch {
     return { ...DEFAULT_UI_CONFIG };
@@ -490,13 +754,27 @@ export const getLabelOverride = (key: string): string | null => {
 };
 
 export const resolveTokens = (config: UiConfig): UiTokens => {
+  let tokens = config.tokens;
   if (config.paletteMode === 'preset' && config.activePresetId) {
     const preset = UI_PRESETS.find((item) => item.id === config.activePresetId);
     if (preset) {
-      return config.themeMode === 'dark' ? preset.dark : preset.light;
+      tokens = config.themeMode === 'dark' ? preset.dark : preset.light;
     }
   }
-  return config.tokens;
+
+  if (config.statusMode === 'preset' && config.activeStatusPresetId) {
+    const statusPreset = UI_STATUS_PRESETS.find(
+      (item) => item.id === config.activeStatusPresetId,
+    );
+    if (statusPreset) {
+      return {
+        ...tokens,
+        ...statusPreset.tokens,
+      };
+    }
+  }
+
+  return tokens;
 };
 
 const setColorVars = (tokens: UiTokens): void => {
