@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { DatePicker } from 'primeng/datepicker';
-import { MeterType, METER_TYPE_LABELS } from '@core/models/meter.model';
+import { MeterType, METER_TYPE_LABELS, getMeterTypeConfigSync } from '@core/models/meter.model';
 
 interface MeterTypeOption {
   type: MeterType;
@@ -34,30 +34,30 @@ export class MeterCreateFormComponent {
   meterTypeOptions: MeterTypeOption[] = [
     {
       type: 'electricity',
-      label: METER_TYPE_LABELS.electricity.TH,
-      icon: METER_TYPE_LABELS.electricity.icon,
-      color: METER_TYPE_LABELS.electricity.color,
+      label: getMeterTypeConfigSync('electricity').TH,
+      icon: getMeterTypeConfigSync('electricity').icon,
+      color: getMeterTypeConfigSync('electricity').color,
       unit: 'kWh'
     },
     {
       type: 'water',
-      label: METER_TYPE_LABELS.water.TH,
-      icon: METER_TYPE_LABELS.water.icon,
-      color: METER_TYPE_LABELS.water.color,
+      label: getMeterTypeConfigSync('water').TH,
+      icon: getMeterTypeConfigSync('water').icon,
+      color: getMeterTypeConfigSync('water').color,
       unit: 'm³'
     },
     {
       type: 'gas',
-      label: METER_TYPE_LABELS.gas.TH,
-      icon: METER_TYPE_LABELS.gas.icon,
-      color: METER_TYPE_LABELS.gas.color,
+      label: getMeterTypeConfigSync('gas').TH,
+      icon: getMeterTypeConfigSync('gas').icon,
+      color: getMeterTypeConfigSync('gas').color,
       unit: 'm³'
     },
     {
       type: 'ac',
-      label: METER_TYPE_LABELS.ac.TH,
-      icon: METER_TYPE_LABELS.ac.icon,
-      color: METER_TYPE_LABELS.ac.color,
+      label: getMeterTypeConfigSync('ac').TH,
+      icon: getMeterTypeConfigSync('ac').icon,
+      color: getMeterTypeConfigSync('ac').color,
       unit: 'kWh'
     }
   ];

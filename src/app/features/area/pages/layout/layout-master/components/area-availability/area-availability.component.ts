@@ -1,7 +1,8 @@
-import { Component, OnInit, output, signal, computed, input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, output, signal, computed, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AreaDataService, StatusDistribution } from '@core/services/area/area-data.service';
 import { AreaStatus } from '@core/models/area.model';
+import { getModuleOverride, applyModuleOverrides, AreaAvailabilityOverride, AreaRentableItem, FacilitiesUtilitiesOverride } from '@core/services/ui-settings';
 
 export interface FilterChangeEvent {
   selectedStatuses: AreaStatus[];
@@ -14,7 +15,9 @@ export interface FilterChangeEvent {
   templateUrl: './area-availability.component.html',
   styleUrl: './area-availability.component.css'
 })
-export class AreaAvailabilityComponent implements OnInit {
+export class AreaAvailabilityComponent implements OnInit, AfterViewInit {
+  @ViewChild('containerRef', { static: false }) containerRef?: ElementRef<HTMLElement>;
+
   mode = input<'per-building' | 'per-floor'>('per-building');
 
   statusDistribution = signal<StatusDistribution[]>([]);
@@ -29,10 +32,48 @@ export class AreaAvailabilityComponent implements OnInit {
 
   filterChanged = output<FilterChangeEvent>();
 
+  // Module config
+  areaConfig = signal<AreaAvailabilityOverride | undefined>(undefined);
+  rentableItems = signal<AreaRentableItem[]>([]);
+
   constructor(private areaDataService: AreaDataService) {}
 
   ngOnInit(): void {
     this.loadStatusDistribution();
+    this.loadModuleConfig();
+  }
+
+  ngAfterViewInit(): void {
+    // Apply scoped CSS variables
+    if (this.containerRef?.nativeElement) {
+      applyModuleOverrides('areaAvailability', this.containerRef.nativeElement);
+    }
+  }
+
+  private loadModuleConfig(): void {
+    const config = getModuleOverride<AreaAvailabilityOverride>('areaAvailability');
+    this.areaConfig.set(config);
+    
+    // Load rentable items from Facilities config instead
+    const facilitiesConfig = getModuleOverride<FacilitiesUtilitiesOverride>('facilitiesUtilities');
+    this.rentableItems.set(facilitiesConfig?.rentableItems || []);
+  }
+
+  getStatusIcon(statusId: AreaStatus): string {
+    const config = this.areaConfig();
+    const icon = config?.statusIcons?.[statusId];
+    if (icon) {
+      // If it's a dataURL, return it; otherwise it's an icon class
+      if (icon.startsWith('data:') || icon.startsWith('http')) {
+        return icon;
+      }
+      return icon; // Icon class
+    }
+    return 'pi-building'; // Default fallback
+  }
+
+  isIconDataUrl(icon: string): boolean {
+    return icon.startsWith('data:') || icon.startsWith('http');
   }
 
   private loadStatusDistribution(): void {

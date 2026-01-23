@@ -5,6 +5,7 @@ import { Building } from '../../models/building.model';
 import { Floor, FloorPlanVersion } from '../../models/floor.model';
 import { Area, AreaStatus } from '../../models/area.model';
 import { getCompleteBuildingData } from '../../data/area-index';
+import { getModuleOverride, AreaAvailabilityOverride } from '../ui-settings';
 
 // Extended Building interface with floors
 export interface BuildingWithFloors extends Building {
@@ -299,43 +300,61 @@ export class AreaDataService {
     // Calculate total for percentages (only active areas)
     const total = areas.filter(a => a.isActive).length;
 
-    // Build distribution array (4 statuses only)
+    // Get module overrides with fallbacks - use type assertion for areaAvailability
+    const areaOverride = getModuleOverride<AreaAvailabilityOverride>('areaAvailability');
+    
+    // Default colors (fallback)
+    const defaultColors = {
+      unallocated: 'rgb(var(--danger))',
+      quotation: 'rgb(var(--info))',
+      leased: 'rgb(var(--warning))',
+      vacant: 'rgb(var(--success))',
+    };
+    
+    const defaultLabels = {
+      unallocated: { label: 'Unallocated', labelTh: 'ยังไม่พร้อม' },
+      quotation: { label: 'Quotation', labelTh: 'คำใบเสนอราคา' },
+      leased: { label: 'Leased', labelTh: 'เช่า' },
+      vacant: { label: 'Vacant', labelTh: 'ว่าง' },
+    };
+
+    // Build distribution array (4 statuses only) with config overrides
     const distribution: StatusDistribution[] = [
       {
         id: 'unallocated',
-        label: 'Unallocated',
-        labelTh: 'ยังไม่พร้อม',
+        label: defaultLabels.unallocated.label,
+        labelTh: areaOverride?.statusColors?.unallocated?.label || defaultLabels.unallocated.labelTh,
         count: statusCounts.get('unallocated')!.count,
         percentage: total > 0 ? (statusCounts.get('unallocated')!.count / total) * 100 : 0,
         warningCount: statusCounts.get('unallocated')!.warningCount,
-        color: 'rgb(var(--danger))'
+        color: areaOverride?.statusColors?.unallocated?.color || defaultColors.unallocated
       },
       {
         id: 'quotation',
-        label: 'Quotation',
-        labelTh: 'คำใบเสนอราคา',
+        label: defaultLabels.quotation.label,
+        labelTh: areaOverride?.statusColors?.quotation?.label || defaultLabels.quotation.labelTh,
         count: statusCounts.get('quotation')!.count,
         percentage: total > 0 ? (statusCounts.get('quotation')!.count / total) * 100 : 0,
         warningCount: statusCounts.get('quotation')!.warningCount,
-        color: 'rgb(var(--info))'
+        color: areaOverride?.statusColors?.quotation?.color || defaultColors.quotation
       },
       {
         id: 'leased',
-        label: 'Leased',
-        labelTh: 'เช่า',
+        label: defaultLabels.leased.label,
+        labelTh: areaOverride?.statusColors?.leased?.label || defaultLabels.leased.labelTh,
         count: statusCounts.get('leased')!.count,
         percentage: total > 0 ? (statusCounts.get('leased')!.count / total) * 100 : 0,
         warningCount: statusCounts.get('leased')!.warningCount,
-        color: 'rgb(var(--warning))'
+        color: areaOverride?.statusColors?.leased?.color || defaultColors.leased
       },
       {
         id: 'vacant',
-        label: 'Vacant',
-        labelTh: 'ว่าง',
+        label: defaultLabels.vacant.label,
+        labelTh: areaOverride?.statusColors?.vacant?.label || defaultLabels.vacant.labelTh,
         count: statusCounts.get('vacant')!.count,
         percentage: total > 0 ? (statusCounts.get('vacant')!.count / total) * 100 : 0,
         warningCount: statusCounts.get('vacant')!.warningCount,
-        color: 'rgb(var(--success))'
+        color: areaOverride?.statusColors?.vacant?.color || defaultColors.vacant
       }
     ];
 

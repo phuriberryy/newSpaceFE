@@ -1,432 +1,509 @@
-<div class="min-h-screen bg-bg text-fg">
-  <div class="max-w-6xl mx-auto px-6 py-6 space-y-6">
-    <div>
-      <h1 class="text-2xl font-semibold text-fg">Interface Change</h1>
-      <p class="text-sm text-muted">
-        ปรับธีม สีหลัก และรูปแบบไอคอนของระบบ (บันทึกและใช้งานได้ทันที)
+<div class="min-h-screen bg-gradient-to-br from-bg via-bg to-card/30">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <!-- Header -->
+    <div class="text-center space-y-2">
+      <h1 class="text-4xl font-bold text-fg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+        Interface Settings
+      </h1>
+      <p class="text-muted text-lg">
+        ปรับแต่ง UI, สี, และไอคอนแยกตามโมดูล - ตั้งค่าผ่าน UI ได้ทั้งหมด
       </p>
     </div>
 
-    <div class="grid lg:grid-cols-[380px,1fr] gap-6">
-      <div class="space-y-6">
-        <div class="bg-card border border-border rounded-xl p-4 space-y-5">
+    <!-- Main Content -->
+    <div class="grid lg:grid-cols-12 gap-6">
+      <!-- Left Sidebar - Global Settings -->
+      <div class="lg:col-span-3 space-y-6">
+        <!-- Theme & Presets -->
+        <div class="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-lg space-y-6">
           <div>
-            <p class="text-sm font-semibold text-fg">Theme Mode</p>
-            <div class="mt-3 flex flex-wrap gap-4 text-sm">
-              <label class="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="light"
-                  [(ngModel)]="config.themeMode"
-                  (change)="onSettingsChange()"
-                />
-                Light
-              </label>
-              <label class="flex items-center gap-2">
-                <input
-                  type="radio"
-                  name="theme"
-                  value="dark"
-                  [(ngModel)]="config.themeMode"
-                  (change)="onSettingsChange()"
-                />
-                Dark
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <p class="text-sm font-semibold text-fg">Color</p>
-          </div>
-
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <p class="text-sm font-semibold text-fg">Palette Presets</p>
-              <span class="text-xs text-muted">เลือกเพื่อใช้ทันที</span>
-            </div>
-            <div class="grid grid-cols-4 gap-3">
-              <button
-                *ngFor="let preset of presets"
-                class="relative h-12 rounded-lg border border-border overflow-hidden"
-                [ngClass]="{
-                  'ring-2 ring-primary': config.activePresetId === preset.id && config.paletteMode === 'preset'
-                }"
-                (click)="selectPreset(preset)"
-                [title]="preset.name"
-              >
-                <span
-                  class="absolute inset-0"
-                  [style.backgroundColor]="preset.light.primary"
-                ></span>
-                <span
-                  *ngIf="config.activePresetId === preset.id && config.paletteMode === 'preset'"
-                  class="absolute top-1 right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-card text-primary text-xs"
+            <h3 class="text-sm font-semibold text-fg mb-4 flex items-center gap-2">
+              <i class="pi pi-palette text-primary"></i>
+              Theme & Presets
+            </h3>
+            
+            <!-- Theme Mode -->
+            <div class="space-y-2 mb-6">
+              <label class="text-xs font-medium text-muted uppercase tracking-wider">Theme Mode</label>
+              <div class="flex gap-2 p-1 bg-bg rounded-lg">
+                <button
+                  (click)="config.themeMode = 'light'; onSettingsChange()"
+                  [class]="config.themeMode === 'light' 
+                    ? 'bg-primary text-primary-foreground shadow-sm' 
+                    : 'text-muted hover:text-fg'"
+                  class="flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all"
                 >
-                  ✓
-                </span>
+                  <i class="pi pi-sun mr-2"></i>Light
+                </button>
+                <button
+                  (click)="config.themeMode = 'dark'; onSettingsChange()"
+                  [class]="config.themeMode === 'dark' 
+                    ? 'bg-primary text-primary-foreground shadow-sm' 
+                    : 'text-muted hover:text-fg'"
+                  class="flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all"
+                >
+                  <i class="pi pi-moon mr-2"></i>Dark
+                </button>
+              </div>
+            </div>
+
+            <!-- Palette Presets -->
+            <div class="space-y-3">
+              <label class="text-xs font-medium text-muted uppercase tracking-wider">Color Palette</label>
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  *ngFor="let preset of presets"
+                  (click)="selectPreset(preset)"
+                  [class]="config.activePresetId === preset.id && config.paletteMode === 'preset'
+                    ? 'ring-2 ring-primary ring-offset-2 scale-105' 
+                    : 'hover:scale-105'"
+                  class="relative h-16 rounded-xl border-2 border-border overflow-hidden transition-all group"
+                  [title]="preset.name"
+                >
+                  <span
+                    class="absolute inset-0"
+                    [style.backgroundColor]="preset.light.primary"
+                  ></span>
+                  <span
+                    *ngIf="config.activePresetId === preset.id && config.paletteMode === 'preset'"
+                    class="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-card shadow-lg text-primary"
+                  >
+                    <i class="pi pi-check text-xs"></i>
+                  </span>
+                  <span class="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {{ preset.name }}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Reset to Default Button -->
+            <div class="pt-4 border-t border-border/50">
+              <button (click)="resetToDefault()" 
+                class="w-full px-4 py-2.5 rounded-lg bg-bg border-2 border-border text-fg font-medium hover:bg-card transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                <i class="pi pi-refresh"></i>
+                Reset All to Default
               </button>
             </div>
-          </div>
-
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <p class="text-sm font-semibold text-fg">Status Presets</p>
-              <span class="text-xs text-muted">เลือกธีมสำเร็จ</span>
-            </div>
-            <div class="grid grid-cols-4 gap-3">
-              <button
-                *ngFor="let preset of statusPresets"
-                class="relative h-10 rounded-lg border border-border overflow-hidden"
-                [ngClass]="{
-                  'ring-2 ring-primary':
-                    config.activeStatusPresetId === preset.id && config.statusMode === 'preset'
-                }"
-                (click)="selectStatusPreset(preset)"
-                [title]="preset.name"
-              >
-                <span class="absolute inset-0 grid grid-cols-2 grid-rows-2">
-                  <span [style.background]="preset.tokens.success"></span>
-                  <span [style.background]="preset.tokens.warning"></span>
-                  <span [style.background]="preset.tokens.danger"></span>
-                  <span [style.background]="preset.tokens.info"></span>
-                </span>
-                <span
-                  *ngIf="
-                    config.activeStatusPresetId === preset.id && config.statusMode === 'preset'
-                  "
-                  class="absolute top-1 right-1 inline-flex h-4 w-4 items-center justify-center rounded-full bg-card text-primary text-xs"
-                >
-                  ✓
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <div class="grid grid-cols-2 gap-2 text-sm"></div>
           </div>
         </div>
 
-        <div class="bg-card border border-border rounded-xl p-4 space-y-6">
+        <!-- Module Configuration -->
+        <div class="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-lg">
           <div>
-            <p class="text-sm font-semibold text-fg">Custom Colors</p>
-            <p class="text-xs text-muted">เลือกสีหลักของระบบและสีสถานะ</p>
-          </div>
+            <h3 class="text-sm font-semibold text-fg mb-4 flex items-center gap-2">
+              <i class="pi pi-sliders-h text-primary"></i>
+              Module Configuration
+            </h3>
+            <p class="text-xs text-muted mb-4">เลือกโมดูลที่ต้องการตั้งค่า - การเปลี่ยนแปลงมีผลเฉพาะโมดูลที่เลือก</p>
 
-          <div class="space-y-3">
-            <p class="text-xs font-semibold text-muted uppercase tracking-wider">Surface & Text</p>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Background (หน้า)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.bg" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.bg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Text (ตัวอักษร)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.fg" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.fg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Card (กล่อง)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.card" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.card }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Border (เส้นแบ่ง)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.border" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.border }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Input (ช่องกรอก)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.input" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.input }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Muted (ข้อความรอง)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.muted" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.muted }}</span>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <p class="text-xs font-semibold text-muted uppercase tracking-wider">Brand</p>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Primary (ปุ่มหลัก)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.primary" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.primary }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Primary Text</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.primaryFg" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.primaryFg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Secondary (accent)</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.secondary" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.secondary }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Secondary Text</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.secondaryFg" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.secondaryFg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Link</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.link" (input)="onTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.link }}</span>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <div class="space-y-3">
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Success</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.success" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.success }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Success Text</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.successFg" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.successFg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Warning</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.warning" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.warning }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Warning Text</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.warningFg" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.warningFg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Danger</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.danger" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.danger }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Danger Text</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.dangerFg" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.dangerFg }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Info</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.info" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.info }}</span>
-                </div>
-              </label>
-              <label class="space-y-1">
-                <span class="text-xs text-muted">Info Text</span>
-                <div class="flex items-center gap-2">
-                  <input type="color" [(ngModel)]="config.tokens.infoFg" (input)="onStatusTokenChange()"
-                    class="h-10 w-12 rounded-md border border-border bg-bg" />
-                  <span class="text-xs text-muted">{{ config.tokens.infoFg }}</span>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <label class="space-y-1">
-              <span class="text-xs text-muted">Icon Style</span>
-              <select
-                [(ngModel)]="config.iconStyle"
-                (change)="onSettingsChange()"
-                class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
+            <!-- Module Selection Buttons -->
+            <div class="space-y-2">
+              <button
+                *ngFor="let option of moduleOptions"
+                (click)="selectedModule = option.value; onModuleChange()"
+                [class]="selectedModule === option.value
+                  ? 'border-2 border-primary bg-primary/5 text-primary' 
+                  : 'border border-border hover:border-primary/50 text-muted hover:text-fg'"
+                class="w-full p-3 rounded-lg text-left transition-all group"
               >
-                <option value="outline">Outline</option>
-                <option value="solid">Solid</option>
-              </select>
-            </label>
-            <label class="space-y-1">
-              <span class="text-xs text-muted">Navigation Labels</span>
-              <input
-                type="text"
-                [(ngModel)]="config.labels['sales']"
-                (input)="onSettingsChange()"
-                placeholder="Sales"
-                class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
-              />
-            </label>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3 text-xs text-muted">
-            <input
-              type="text"
-              [(ngModel)]="config.labels['area']"
-              (input)="onSettingsChange()"
-              placeholder="Area"
-              class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
-            />
-            <input
-              type="text"
-              [(ngModel)]="config.labels['contract']"
-              (input)="onSettingsChange()"
-              placeholder="Contract"
-              class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
-            />
-            <input
-              type="text"
-              [(ngModel)]="config.labels['collection_finance']"
-              (input)="onSettingsChange()"
-              placeholder="collection_finance"
-              class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
-            />
-            <input
-              type="text"
-              [(ngModel)]="config.labels['facilities']"
-              (input)="onSettingsChange()"
-              placeholder="facilities"
-              class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
-            />
-            <input
-              type="text"
-              [(ngModel)]="config.labels['report']"
-              (input)="onSettingsChange()"
-              placeholder="Report"
-              class="w-full rounded-md border border-border bg-bg px-3 py-2 text-sm text-fg"
-            />
-          </div>
-
-          <div class="flex flex-wrap gap-2 pt-2">
-            <button
-              class="px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-semibold"
-              (click)="onSettingsChange()"
-            >
-              Apply / Save
-            </button>
-            <button
-              class="px-4 py-2 rounded-md border border-border text-sm text-fg"
-              (click)="resetToDefault()"
-            >
-              Reset to Default
-            </button>
-            <span
-              *ngIf="saveStatus"
-              class="self-center text-xs font-medium text-success"
-            >
-              {{ saveStatus }}
-            </span>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-2 text-sm font-medium">
+                    <i [class]="option.value === 'areaAvailability' ? 'pi pi-building' : 'pi pi-bolt'"></i>
+                    {{ option.label }}
+                  </span>
+                  <i *ngIf="selectedModule === option.value" class="pi pi-check-circle text-primary"></i>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="bg-card border border-border rounded-xl p-6 space-y-6">
-        <div>
-          <h2 class="text-sm font-semibold text-fg">Live Preview</h2>
-          <p class="text-xs text-muted">ตัวอย่างองค์ประกอบที่อัปเดตตามธีม</p>
-        </div>
-
-        <div class="rounded-xl border border-border overflow-hidden">
-          <div class="bg-gradient-to-r from-primary to-secondary px-4 py-3 text-primary-foreground text-sm font-semibold">
-            SPACE Preview Header
-          </div>
-          <div class="bg-bg p-4 space-y-4">
-            <div class="flex flex-wrap gap-2">
-              <button class="px-3 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium">
-                Primary
-              </button>
-              <button class="px-3 py-2 rounded-md bg-secondary text-secondary-foreground text-sm font-medium">
-                Secondary
-              </button>
-              <button class="px-3 py-2 rounded-md bg-danger text-danger-foreground text-sm font-medium">
-                Danger
-              </button>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-4">
-              <div class="bg-card border border-border rounded-lg p-4 space-y-2">
-                <p class="text-sm font-semibold text-fg">Interface Card</p>
-                <p class="text-xs text-muted">ตัวอย่างเนื้อหาใน card</p>
-                <a class="text-sm text-link font-medium" href="#">Primary link</a>
-              </div>
-              <div class="space-y-2">
-                <div class="flex flex-wrap gap-2 text-xs font-semibold">
-                  <span class="px-2 py-1 rounded-full bg-success text-success-foreground">Success</span>
-                  <span class="px-2 py-1 rounded-full bg-warning text-warning-foreground">Warning</span>
-                  <span class="px-2 py-1 rounded-full bg-danger text-danger-foreground">Danger</span>
-                  <span class="px-2 py-1 rounded-full bg-info text-info-foreground">Info</span>
+      <!-- Main Content Area -->
+      <div class="lg:col-span-9 space-y-6">
+        <!-- Module Content -->
+        <div class="bg-card/80 backdrop-blur-sm border border-border/50 rounded-2xl p-6 shadow-lg">
+          <div class="min-h-[500px]">
+            <!-- Area Availability Settings -->
+            <div *ngIf="selectedModule === 'areaAvailability'" class="space-y-6 animate-fadeIn">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h3 class="text-lg font-bold text-fg mb-1">Area Availability</h3>
+                  <p class="text-sm text-muted">ตั้งค่าสี, ชื่อ และไอคอนของสถานะพื้นที่</p>
                 </div>
-                <input
-                  class="w-full rounded-md border border-border bg-input px-3 py-2 text-sm text-fg placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-ring"
-                  placeholder="Input preview"
-                />
+                <div class="flex items-center gap-3">
+                  <button (click)="saveModuleSettings()" 
+                    class="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                    <i class="pi pi-save"></i>
+                    Save
+                  </button>
+                  <button (click)="resetModuleToDefault()" 
+                    class="px-5 py-2.5 rounded-lg bg-bg border-2 border-border text-fg font-medium hover:bg-card transition-all shadow-sm hover:shadow-md flex items-center gap-2">
+                    <i class="pi pi-refresh"></i>
+                    Reset to Default
+                  </button>
+                </div>
+              </div>
+
+              <!-- Status Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div *ngFor="let status of [
+                  { key: 'unallocated', label: 'ยังไม่พร้อม', defaultColor: '#FF6384', icon: 'pi-times-circle' },
+                  { key: 'quotation', label: 'คำใบเสนอราคา', defaultColor: '#4CA3FF', icon: 'pi-file-edit' },
+                  { key: 'leased', label: 'เช่า', defaultColor: '#FFD05F', icon: 'pi-check-circle' },
+                  { key: 'vacant', label: 'ว่าง', defaultColor: '#80E08E', icon: 'pi-circle' }
+                ]; trackBy: trackByStatusKey" 
+                  class="group relative bg-gradient-to-br from-card to-card/50 border-2 border-border rounded-xl p-5 hover:border-primary/50 transition-all hover:shadow-lg">
+                  
+                  <!-- Preview Badge -->
+                  <div class="absolute top-4 right-4">
+                    <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold shadow-md"
+                      [style.backgroundColor]="getStatusColor(status.key)"
+                      [style.color]="getContrastColor(getStatusColor(status.key))">
+                      <i *ngIf="!isIconDataUrl(getStatusIcon(status.key)) && getStatusIcon(status.key)" 
+                        [ngClass]="getStatusIcon(status.key) || status.icon"></i>
+                      <img *ngIf="isIconDataUrl(getStatusIcon(status.key))" 
+                        [src]="getStatusIcon(status.key)" alt="" class="w-4 h-4" />
+                      <span>{{ getStatusLabel(status.key) }}</span>
+                    </div>
+                  </div>
+
+                  <div class="space-y-4">
+                    <div>
+                      <label class="text-sm font-semibold text-fg mb-2 block">{{ status.label }}</label>
+                    </div>
+
+                    <!-- Color Picker -->
+                    <div class="space-y-2">
+                      <label class="text-xs text-muted">สี</label>
+                      <div class="flex items-center gap-3">
+                        <div class="relative">
+                          <input type="color" [value]="getStatusColor(status.key)" (input)="setStatusColor(status.key, $any($event.target).value)"
+                            class="h-12 w-16 rounded-lg border-2 border-border cursor-pointer shadow-inner" />
+                          <div class="absolute inset-0 rounded-lg ring-2 ring-offset-2 ring-offset-card ring-primary/0 group-hover:ring-primary/50 transition-all pointer-events-none"></div>
+                        </div>
+                        <input type="text" [value]="getStatusColor(status.key)" (input)="setStatusColor(status.key, $any($event.target).value)"
+                          class="flex-1 rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-primary focus:border-transparent" />
+                      </div>
+                    </div>
+
+                    <!-- Label - Multi-language Support -->
+                    <div class="space-y-2">
+                      <label class="text-xs text-muted font-medium">ชื่อสถานะ (แก้ไขได้)</label>
+                      <div class="space-y-2">
+                        <div>
+                          <label class="text-xs text-muted mb-1 block">ภาษาไทย</label>
+                          <input type="text" [value]="getStatusLabel(status.key)" (input)="setStatusLabel(status.key, $any($event.target).value)"
+                            placeholder="เช่น ยังไม่พร้อม, คำใบเสนอราคา, เช่า, ว่าง" 
+                            class="w-full rounded-lg border border-border bg-bg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        </div>
+                        <div>
+                          <label class="text-xs text-muted mb-1 block">English</label>
+                          <input type="text" [value]="getStatusLabelEn(status.key)" (input)="setStatusLabelEn(status.key, $any($event.target).value)"
+                            placeholder="e.g. Not Ready, Quotation, Leased, Vacant" 
+                            class="w-full rounded-lg border border-border bg-bg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Icon -->
+                    <div class="space-y-2">
+                      <label class="text-xs text-muted">ไอคอน</label>
+                      <div class="flex items-center gap-2">
+                        <button (click)="openIconPicker('areaAvailability', status.key, 'status_' + status.key)"
+                          class="flex-1 px-4 py-2.5 rounded-lg border border-border bg-bg hover:bg-card text-sm flex items-center justify-center gap-2 transition-all hover:border-primary">
+                          <i *ngIf="!isIconDataUrl(getStatusIcon(status.key)) && getStatusIcon(status.key)" 
+                            [ngClass]="getStatusIcon(status.key) || status.icon" class="text-lg"></i>
+                          <img *ngIf="isIconDataUrl(getStatusIcon(status.key))" 
+                            [src]="getStatusIcon(status.key)" alt="" class="w-5 h-5" />
+                          <span class="text-xs text-muted">{{ getStatusIcon(status.key) ? 'เปลี่ยน' : 'เลือกไอคอน' }}</span>
+                        </button>
+                        <input type="text" [value]="getStatusIcon(status.key)" (input)="setStatusIcon(status.key, $any($event.target).value)"
+                          placeholder="icon class" 
+                          class="flex-1 rounded-lg border border-border bg-bg px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        <label class="px-4 py-2.5 rounded-lg border border-border bg-bg hover:bg-card text-xs cursor-pointer transition-all hover:border-primary">
+                          <input type="file" accept="image/png,image/svg+xml" (change)="onIconUpload($event, status.key)"
+                            class="hidden" />
+                          <i class="pi pi-upload mr-1"></i>อัปโหลด
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="border border-border rounded-lg overflow-hidden text-sm">
-              <div class="grid grid-cols-3 bg-card text-fg font-semibold">
-                <div class="px-3 py-2">Name</div>
-                <div class="px-3 py-2">Status</div>
-                <div class="px-3 py-2 text-right">Amount</div>
+            <!-- Facilities Settings -->
+            <div *ngIf="selectedModule === 'facilitiesUtilities'" class="space-y-6 animate-fadeIn">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h3 class="text-lg font-bold text-fg mb-1">Facilities (Utilities)</h3>
+                  <p class="text-sm text-muted">จัดการประเภทสิ่งอำนวยความสะดวก - เพิ่ม, แก้ไข, หรือลบได้ตามต้องการ</p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <button (click)="addFacilitiesItem()" 
+                    class="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                    <i class="pi pi-plus"></i>
+                    เพิ่มประเภท
+                  </button>
+                  <button (click)="saveModuleSettings()" 
+                    class="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                    <i class="pi pi-save"></i>
+                    Save
+                  </button>
+                  <button (click)="resetModuleToDefault()" 
+                    class="px-5 py-2.5 rounded-lg bg-bg border-2 border-border text-fg font-medium hover:bg-card transition-all shadow-sm hover:shadow-md flex items-center gap-2">
+                    <i class="pi pi-refresh"></i>
+                    Reset to Default
+                  </button>
+                </div>
               </div>
-              <div class="grid grid-cols-3 border-t border-border text-fg">
-                <div class="px-3 py-2">Invoice #1024</div>
-                <div class="px-3 py-2 text-success">Completed</div>
-                <div class="px-3 py-2 text-right">฿12,500</div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div *ngFor="let item of facilitiesChipItems; trackBy: trackByFacilityId; let i = index" 
+                  class="group bg-gradient-to-br from-card to-card/50 border-2 border-border rounded-xl p-5 hover:border-primary/50 transition-all hover:shadow-lg">
+                  <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                      <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-bold text-sm">
+                        {{ i + 1 }}
+                      </div>
+                      <div class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium shadow-sm"
+                        [style.backgroundColor]="item.color + '20'"
+                        [style.color]="item.color">
+                        <i *ngIf="item.icon && !isIconDataUrl(item.icon)" [ngClass]="item.icon || 'pi-circle'"></i>
+                        <img *ngIf="item.icon && isIconDataUrl(item.icon)" [src]="item.icon" alt="" class="w-4 h-4" />
+                        <span>{{ item.label || 'ชื่อประเภท' }}</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button (click)="removeFacilitiesItem(item)" 
+                        class="p-2 rounded-lg border border-danger/50 text-danger hover:bg-danger/10 transition-all">
+                        <i class="pi pi-trash text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                      <label class="text-xs text-muted font-medium">ชื่อประเภท</label>
+                      <input type="text" [(ngModel)]="item.label" (input)="onModuleSettingsChange()"
+                        placeholder="เช่น ไฟฟ้า, น้ำ, แก๊ส" 
+                        class="w-full rounded-lg border border-border bg-bg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-transparent" />
+                    </div>
+                    <div class="space-y-2">
+                      <label class="text-xs text-muted font-medium">สี</label>
+                      <div class="flex items-center gap-2">
+                        <input type="color" [(ngModel)]="item.color" (input)="onModuleSettingsChange()"
+                          class="h-12 w-16 rounded-lg border-2 border-border cursor-pointer shadow-inner" />
+                        <input type="text" [(ngModel)]="item.color" (input)="onModuleSettingsChange()"
+                          class="flex-1 rounded-lg border border-border bg-bg px-3 py-2.5 text-xs font-mono focus:ring-2 focus:ring-primary focus:border-transparent" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 space-y-2">
+                    <label class="text-xs text-muted font-medium">ไอคอน</label>
+                    <div class="flex items-center gap-2">
+                      <button (click)="openIconPicker('facilitiesUtilities', item.id, 'icon')"
+                        class="flex-1 px-4 py-2.5 rounded-lg border border-border bg-bg hover:bg-card text-sm flex items-center justify-center gap-2 transition-all hover:border-primary">
+                        <i *ngIf="item.icon && !isIconDataUrl(item.icon)" [ngClass]="item.icon || 'pi-circle'"></i>
+                        <img *ngIf="item.icon && isIconDataUrl(item.icon)" [src]="item.icon" alt="" class="w-5 h-5" />
+                        <span class="text-xs text-muted">{{ item.icon ? 'เปลี่ยน' : 'เลือกไอคอน' }}</span>
+                      </button>
+                      <input type="text" [(ngModel)]="item.icon" (input)="onModuleSettingsChange()"
+                        placeholder="icon class" 
+                        class="flex-1 rounded-lg border border-border bg-bg px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary focus:border-transparent" />
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="facilitiesChipItems.length === 0" 
+                  class="col-span-full text-center py-12 border-2 border-dashed border-border rounded-xl">
+                  <i class="pi pi-inbox text-4xl text-muted mb-3"></i>
+                  <p class="text-muted text-sm">ยังไม่มีประเภท</p>
+                  <p class="text-muted text-xs mt-1">คลิก "เพิ่มประเภท" เพื่อเริ่มต้น</p>
+                </div>
               </div>
-              <div class="grid grid-cols-3 border-t border-border text-fg">
-                <div class="px-3 py-2">Invoice #1025</div>
-                <div class="px-3 py-2 text-warning">Pending</div>
-                <div class="px-3 py-2 text-right">฿6,200</div>
+
+              <!-- Rentable Items -->
+              <div class="mt-8 space-y-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="text-base font-bold text-fg mb-1">สิ่งที่จะเช่าได้</h4>
+                    <p class="text-sm text-muted">เพิ่มรายการสิ่งอำนวยความสะดวกที่สามารถเช่าได้</p>
+                  </div>
+                  <button (click)="addRentableItem()" 
+                    class="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+                    <i class="pi pi-plus"></i>
+                    เพิ่มรายการ
+                  </button>
+                </div>
+
+                <div class="space-y-3">
+                  <div *ngFor="let item of facilitiesRentableItems; trackBy: trackByItemId; let i = index" 
+                    class="group bg-gradient-to-br from-card to-card/50 border-2 border-border rounded-xl p-5 hover:border-primary/50 transition-all hover:shadow-lg">
+                    <div class="flex items-start justify-between mb-4">
+                      <div class="flex items-center gap-3">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary font-bold text-sm">
+                          {{ i + 1 }}
+                        </div>
+                        <div class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium shadow-sm"
+                          [style.backgroundColor]="item.color + '20'"
+                          [style.color]="item.color">
+                          <i *ngIf="item.icon && !isIconDataUrl(item.icon)" [ngClass]="item.icon || 'pi-circle'"></i>
+                          <img *ngIf="item.icon && isIconDataUrl(item.icon)" [src]="item.icon" alt="" class="w-4 h-4" />
+                          <span>{{ item.name || 'ชื่อรายการ' }}</span>
+                        </div>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <button (click)="removeRentableItem(item)" 
+                          class="p-2 rounded-lg border border-danger/50 text-danger hover:bg-danger/10 transition-all">
+                          <i class="pi pi-trash text-xs"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                      <div class="space-y-2">
+                        <label class="text-xs text-muted font-medium">ชื่อรายการ</label>
+                        <input type="text" [(ngModel)]="item.name" (input)="onModuleSettingsChange()"
+                          placeholder="เช่น โต๊ะ, เก้าอี้" 
+                          class="w-full rounded-lg border border-border bg-bg px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-transparent" />
+                      </div>
+                      <div class="space-y-2">
+                        <label class="text-xs text-muted font-medium">สี</label>
+                        <div class="flex items-center gap-2">
+                          <input type="color" [(ngModel)]="item.color" (input)="onModuleSettingsChange()"
+                            class="h-12 w-16 rounded-lg border-2 border-border cursor-pointer shadow-inner" />
+                          <input type="text" [(ngModel)]="item.color" (input)="onModuleSettingsChange()"
+                            class="flex-1 rounded-lg border border-border bg-bg px-3 py-2.5 text-xs font-mono focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mt-4 space-y-2">
+                      <label class="text-xs text-muted font-medium">ไอคอน</label>
+                      <div class="flex items-center gap-2">
+                        <button (click)="openIconPicker('facilitiesUtilities', item.id, 'rentable')"
+                          class="flex-1 px-4 py-2.5 rounded-lg border border-border bg-bg hover:bg-card text-sm flex items-center justify-center gap-2 transition-all hover:border-primary">
+                          <i *ngIf="item.icon && !isIconDataUrl(item.icon)" [ngClass]="item.icon || 'pi-circle'"></i>
+                          <img *ngIf="item.icon && isIconDataUrl(item.icon)" [src]="item.icon" alt="" class="w-5 h-5" />
+                          <span class="text-xs text-muted">{{ item.icon ? 'เปลี่ยน' : 'เลือกไอคอน' }}</span>
+                        </button>
+                        <input type="text" [(ngModel)]="item.icon" (input)="onModuleSettingsChange()"
+                          placeholder="icon class" 
+                          class="flex-1 rounded-lg border border-border bg-bg px-3 py-2.5 text-xs focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        <label class="px-4 py-2.5 rounded-lg border border-border bg-bg hover:bg-card text-xs cursor-pointer transition-all hover:border-primary">
+                          <input type="file" accept="image/png,image/svg+xml" (change)="onRentableItemIconUpload($event, item)"
+                            class="hidden" />
+                          <i class="pi pi-upload mr-1"></i>อัปโหลด
+                        </label>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div *ngIf="facilitiesRentableItems.length === 0" 
+                    class="text-center py-12 border-2 border-dashed border-border rounded-xl">
+                    <i class="pi pi-inbox text-4xl text-muted mb-3"></i>
+                    <p class="text-muted text-sm">ยังไม่มีรายการ</p>
+                    <p class="text-muted text-xs mt-1">คลิก "เพิ่มรายการ" เพื่อเริ่มต้น</p>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!selectedModule" class="text-center py-20">
+              <i class="pi pi-sliders-h text-6xl text-muted mb-4"></i>
+              <h3 class="text-xl font-semibold text-fg mb-2">เลือกโมดูลเพื่อเริ่มตั้งค่า</h3>
+              <p class="text-muted">เลือกโมดูลจากฝั่งซ้ายเพื่อเริ่มต้นการตั้งค่า</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Icon Picker Modal -->
+  <div *ngIf="showIconPicker" 
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+    (click)="closeIconPicker()">
+    <div class="bg-card border border-border/50 rounded-2xl p-6 max-w-4xl w-full max-h-[85vh] overflow-y-auto shadow-2xl"
+      (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h3 class="text-xl font-bold text-fg">Select Icon</h3>
+          <p class="text-sm text-muted mt-1">Choose an icon from the library or upload your own image. You can edit icon names.</p>
+          <p class="text-xs text-muted mt-1 italic">Note: Some icons may appear as placeholders. For better results, upload custom images for Water, Gas, and other specific utilities.</p>
+        </div>
+        <button (click)="closeIconPicker()" 
+          class="p-2 rounded-lg hover:bg-bg transition-colors">
+          <i class="pi pi-times text-lg"></i>
+        </button>
+      </div>
+      
+      <!-- Category Tabs -->
+      <div class="flex flex-wrap gap-2 mb-6 pb-4 border-b border-border">
+        <button 
+          (click)="selectedIconCategory = ''"
+          [class]="!selectedIconCategory 
+            ? 'px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm' 
+            : 'px-4 py-2 rounded-lg bg-bg text-muted hover:text-fg font-medium text-sm transition-colors'"
+        >
+          All
+        </button>
+        <button 
+          *ngFor="let category of getIconCategories()"
+          (click)="selectedIconCategory = category"
+          [class]="selectedIconCategory === category 
+            ? 'px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm' 
+            : 'px-4 py-2 rounded-lg bg-bg text-muted hover:text-fg font-medium text-sm transition-colors'"
+        >
+          {{ category }}
+        </button>
+      </div>
+
+      <!-- Icons Grid by Category -->
+      <div class="space-y-6">
+        <div *ngFor="let category of getIconCategories()" 
+          [hidden]="selectedIconCategory && selectedIconCategory !== category && selectedIconCategory !== ''">
+          <h4 *ngIf="!selectedIconCategory || selectedIconCategory === category" class="text-sm font-semibold text-fg mb-3">{{ category }}</h4>
+          <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
+            <div *ngFor="let icon of getIconsByCategory(category); trackBy: trackByIconIndex; let catIndex = index"
+              class="group relative">
+              <button 
+                (click)="selectIcon(icon.class)"
+                class="w-full p-4 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all flex flex-col items-center gap-2 hover:scale-105">
+                <i [ngClass]="icon.class" class="text-2xl text-fg group-hover:text-primary transition-colors" [attr.aria-label]="icon.name"></i>
+                <div class="w-full">
+                  <input 
+                    *ngIf="isEditingIcon(getIconIndex(icon))"
+                    type="text" 
+                    [(ngModel)]="icon.name"
+                    (blur)="saveIconName(getIconIndex(icon))"
+                    (keyup.enter)="saveIconName(getIconIndex(icon))"
+                    (keyup.escape)="cancelEditingIconName()"
+                    class="w-full text-xs text-center bg-transparent border-b border-primary focus:outline-none focus:ring-0 px-1 py-0.5"
+                    (click)="$event.stopPropagation()"
+                  />
+                  <span 
+                    *ngIf="!isEditingIcon(getIconIndex(icon))"
+                    (dblclick)="startEditingIconName(getIconIndex(icon)); $event.stopPropagation()"
+                    class="text-xs text-muted group-hover:text-fg transition-colors cursor-pointer block truncate"
+                    [title]="'Double-click to edit: ' + icon.name">
+                    {{ icon.name }}
+                  </span>
+                </div>
+              </button>
+              <button 
+                *ngIf="icon.editable"
+                (click)="startEditingIconName(getIconIndex(icon)); $event.stopPropagation()"
+                class="absolute top-1 right-1 p-1 rounded bg-card/80 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-muted hover:text-fg"
+                title="Edit name">
+                <i class="pi pi-pencil"></i>
+              </button>
             </div>
           </div>
         </div>

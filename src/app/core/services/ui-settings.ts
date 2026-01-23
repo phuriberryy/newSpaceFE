@@ -36,6 +36,47 @@ export interface UiStatusTokens {
   infoFg: string;
 }
 
+// Module-specific overrides
+export type ModuleId = 'areaAvailability' | 'facilitiesUtilities';
+
+export interface AreaStatusConfig {
+  unallocated?: { color: string; label: string; labelEn?: string; icon?: string };
+  quotation?: { color: string; label: string; labelEn?: string; icon?: string };
+  leased?: { color: string; label: string; labelEn?: string; icon?: string };
+  vacant?: { color: string; label: string; labelEn?: string; icon?: string };
+}
+
+export interface AreaRentableItem {
+  id: string;
+  name: string;
+  icon?: string; // dataURL or icon class
+  color: string;
+  enabled: boolean;
+  order: number;
+}
+
+export interface AreaAvailabilityOverride {
+  statusColors?: AreaStatusConfig;
+  statusIcons?: Record<string, string>; // statusId -> icon (dataURL or icon class)
+}
+
+export interface FacilitiesChipConfig {
+  electricity?: { color: string; label: string; icon?: string };
+  water?: { color: string; label: string; icon?: string };
+  gas?: { color: string; label: string; icon?: string };
+  ac?: { color: string; label: string; icon?: string };
+}
+
+export interface FacilitiesUtilitiesOverride {
+  chips?: FacilitiesChipConfig;
+  rentableItems?: AreaRentableItem[];
+}
+
+export interface ModuleOverrides {
+  areaAvailability?: AreaAvailabilityOverride;
+  facilitiesUtilities?: FacilitiesUtilitiesOverride;
+}
+
 export interface UiConfig {
   themeMode: UiThemeMode;
   paletteMode: UiPaletteMode;
@@ -45,6 +86,7 @@ export interface UiConfig {
   tokens: UiTokens;
   iconStyle: UiIconStyle;
   labels: Record<string, string>;
+  moduleOverrides?: ModuleOverrides;
 }
 
 export interface UiPreset {
@@ -446,6 +488,7 @@ export const DEFAULT_UI_CONFIG: UiConfig = {
     report: 'Report',
     report_dashboard: 'Report',
   },
+  moduleOverrides: {},
 };
 
 export const loadUiConfig = (): UiConfig => {
@@ -486,6 +529,10 @@ export const loadUiConfig = (): UiConfig => {
         ...DEFAULT_UI_CONFIG.labels,
         ...(parsed.labels || {}),
       },
+      moduleOverrides: {
+        ...DEFAULT_UI_CONFIG.moduleOverrides,
+        ...(parsed.moduleOverrides || {}),
+      },
       paletteMode,
       activePresetId: paletteMode === 'preset' ? resolvedPresetId : null,
       statusMode,
@@ -520,6 +567,75 @@ export const applyUiConfig = (config: UiConfig): void => {
 export const getLabelOverride = (key: string): string | null => {
   const config = loadUiConfig();
   return config.labels?.[key] || null;
+};
+
+/**
+ * Apply module-specific CSS variables to a scoped element
+ * This ensures overrides only affect the selected module
+ */
+export const applyModuleOverrides = (moduleId: ModuleId, element: HTMLElement): void => {
+  const config = loadUiConfig();
+  const overrides = config.moduleOverrides?.[moduleId];
+  if (!overrides) {
+    return;
+  }
+
+  if (moduleId === 'areaAvailability') {
+    const areaOverrides = overrides as AreaAvailabilityOverride;
+    if (areaOverrides.statusColors) {
+      const statusColors = areaOverrides.statusColors;
+      if (statusColors.unallocated?.color) {
+        setScopedColorVar(element, '--area-status-unallocated', statusColors.unallocated.color);
+      }
+      if (statusColors.quotation?.color) {
+        setScopedColorVar(element, '--area-status-quotation', statusColors.quotation.color);
+      }
+      if (statusColors.leased?.color) {
+        setScopedColorVar(element, '--area-status-leased', statusColors.leased.color);
+      }
+      if (statusColors.vacant?.color) {
+        setScopedColorVar(element, '--area-status-vacant', statusColors.vacant.color);
+      }
+    }
+  } else if (moduleId === 'facilitiesUtilities') {
+    const facilitiesOverrides = overrides as FacilitiesUtilitiesOverride;
+    if (facilitiesOverrides.chips) {
+      const chips = facilitiesOverrides.chips;
+      if (chips.electricity?.color) {
+        setScopedColorVar(element, '--facilities-chip-electricity', chips.electricity.color);
+      }
+      if (chips.water?.color) {
+        setScopedColorVar(element, '--facilities-chip-water', chips.water.color);
+      }
+      if (chips.gas?.color) {
+        setScopedColorVar(element, '--facilities-chip-gas', chips.gas.color);
+      }
+      if (chips.ac?.color) {
+        setScopedColorVar(element, '--facilities-chip-ac', chips.ac.color);
+      }
+    }
+  }
+};
+
+/**
+ * Set a CSS variable on a specific element (scoped)
+ */
+const setScopedColorVar = (element: HTMLElement, name: string, hex: string): void => {
+  const rgb = hexToRgb(hex);
+  if (!rgb) {
+    return;
+  }
+  element.style.setProperty(name, `${rgb.r} ${rgb.g} ${rgb.b}`);
+};
+
+/**
+ * Get module override config for a specific module
+ */
+export const getModuleOverride = <T extends ModuleOverrides[keyof ModuleOverrides]>(
+  moduleId: ModuleId,
+): T | undefined => {
+  const config = loadUiConfig();
+  return config.moduleOverrides?.[moduleId] as T | undefined;
 };
 
 export const resolveTokens = (config: UiConfig): UiTokens => {

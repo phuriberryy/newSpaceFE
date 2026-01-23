@@ -3,7 +3,7 @@ import { Component, input, output, signal, computed, effect } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { Meter, METER_TYPE_LABELS } from '@core/models/meter.model';
+import { Meter, METER_TYPE_LABELS, getMeterTypeConfigSync } from '@core/models/meter.model';
 
 @Component({
   selector: 'app-meter-input-card',
@@ -37,17 +37,17 @@ export class MeterInputCardComponent {
 
   getMeterIcon(): string {
     const type = this.meter().meterType;
-    return METER_TYPE_LABELS[type]?.icon || 'pi-bolt';
+    return getMeterTypeConfigSync(type).icon;
   }
 
   getMeterColor(): string {
     const type = this.meter().meterType;
-    return METER_TYPE_LABELS[type]?.color || '#667eea';
+    return getMeterTypeConfigSync(type).color;
   }
 
   getMeterLabel(): string {
     const type = this.meter().meterType;
-    return METER_TYPE_LABELS[type]?.EN || 'Electricity';
+    return getMeterTypeConfigSync(type).TH; // Use TH for display
   }
 
   getExpectedRange(): string {

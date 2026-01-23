@@ -1,11 +1,12 @@
 // utilities-master.component.ts - FINAL with Meter List tab
-import { Component, signal } from '@angular/core';
+import { Component, signal, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatsOverviewComponent } from './components/stats-overview/stats-overview.component';
 import { MeterGroupCreateFormComponent } from './components/meter-group-create-form/meter-group-create-form.component';
 import { MeterInputListComponent } from './components/meter-input-list/meter-input-list.component';
 import { MeterListComponent } from './components/meter-list/meter-list.component';
 import { AnalyticsChartsComponent } from './components/analytics-charts/analytics-charts.component';
+import { applyModuleOverrides } from '@core/services/ui-settings';
 
 interface Tab {
   id: string;
@@ -27,7 +28,9 @@ interface Tab {
   templateUrl: './utilities-master.component.html',
   styleUrl: './utilities-master.component.css'
 })
-export class UtilitiesMasterComponent {
+export class UtilitiesMasterComponent implements AfterViewInit {
+  @ViewChild('containerRef', { static: false }) containerRef?: ElementRef<HTMLElement>;
+
   activeTab = signal<string>('dashboard');
 
   tabs: Tab[] = [
@@ -36,6 +39,13 @@ export class UtilitiesMasterComponent {
     { id: 'fill', label: 'Fill Readings', icon: 'pi-pencil' },
     { id: 'list', label: 'Meter List', icon: 'pi-list' }
   ];
+
+  ngAfterViewInit(): void {
+    // Apply scoped CSS variables for Facilities module
+    if (this.containerRef?.nativeElement) {
+      applyModuleOverrides('facilitiesUtilities', this.containerRef.nativeElement);
+    }
+  }
 
   setActiveTab(tabId: string): void {
     this.activeTab.set(tabId);

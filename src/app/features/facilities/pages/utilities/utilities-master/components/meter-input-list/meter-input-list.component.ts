@@ -3,7 +3,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Select } from 'primeng/select';
 import { MeterInputCardComponent } from './components/meter-input-card/meter-input-card.component';
-import { Meter, MeterType, MeterGroup } from '@core/models/meter.model';
+import { Meter, MeterType, MeterGroup, getMeterTypeConfigSync } from '@core/models/meter.model';
 import { MOCK_METERS, MOCK_METER_GROUPS } from '@core/data/meter.mock';
 
 @Component({
@@ -22,13 +22,33 @@ export class MeterInputListComponent implements OnInit {
   expandedMeterId = signal<string | null>(null); // Only ONE expanded at a time
   savedCount = signal<number>(0);
 
-  // Filter options
+  // Filter options - use config with fallback
   filterOptions = [
     { type: 'all' as const, label: 'All Meters', icon: 'pi-th-large', color: '#667eea' },
-    { type: 'electricity' as const, label: 'Electricity', icon: 'pi-bolt', color: '#FFD700' },
-    { type: 'water' as const, label: 'Water', icon: 'pi-droplet', color: '#4CA3FF' },
-    { type: 'gas' as const, label: 'Gas', icon: 'pi-fire', color: '#FF6384' },
-    { type: 'ac' as const, label: 'Air Con', icon: 'pi-sun', color: '#80E08E' }
+    { 
+      type: 'electricity' as const, 
+      label: getMeterTypeConfigSync('electricity').TH, 
+      icon: getMeterTypeConfigSync('electricity').icon, 
+      color: getMeterTypeConfigSync('electricity').color 
+    },
+    { 
+      type: 'water' as const, 
+      label: getMeterTypeConfigSync('water').TH, 
+      icon: getMeterTypeConfigSync('water').icon, 
+      color: getMeterTypeConfigSync('water').color 
+    },
+    { 
+      type: 'gas' as const, 
+      label: getMeterTypeConfigSync('gas').TH, 
+      icon: getMeterTypeConfigSync('gas').icon, 
+      color: getMeterTypeConfigSync('gas').color 
+    },
+    { 
+      type: 'ac' as const, 
+      label: getMeterTypeConfigSync('ac').TH, 
+      icon: getMeterTypeConfigSync('ac').icon, 
+      color: getMeterTypeConfigSync('ac').color 
+    }
   ];
 
   // Computed group dropdown options

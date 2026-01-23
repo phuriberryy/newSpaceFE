@@ -84,3 +84,47 @@ export const METER_STATUS_LABELS: Record<MeterStatus, { TH: string; EN: string; 
   inactive: { TH: 'ไม่ใช้งาน', EN: 'Inactive', COLOR: '#6B7280' },
   pending: { TH: 'รอบันทึก', EN: 'Pending', COLOR: '#F59E0B' }
 };
+
+/**
+ * Get meter type config with module override fallback
+ * This ensures Facilities data fetching is NEVER affected - only presentation
+ * Note: This function is deprecated - use getMeterTypeConfigSync instead
+ */
+export const getMeterTypeConfig = (type: MeterType): { TH: string; EN: string; icon: string; color: string } => {
+  // Use sync version for consistency
+  return getMeterTypeConfigSync(type);
+};
+
+/**
+ * Synchronous version that reads from localStorage directly (for immediate use)
+ * This ensures Facilities data fetching is NEVER affected - only presentation
+ */
+export const getMeterTypeConfigSync = (type: MeterType): { TH: string; EN: string; icon: string; color: string } => {
+  const defaultConfig = METER_TYPE_LABELS[type];
+  
+  if (typeof window === 'undefined') {
+    return defaultConfig;
+  }
+  
+  try {
+    const raw = window.localStorage.getItem('space_ui_config');
+    if (raw) {
+      const config = JSON.parse(raw);
+      // Type assertion: we know facilitiesUtilities has chips property
+      const facilitiesOverride = config?.moduleOverrides?.facilitiesUtilities as { chips?: Record<MeterType, { color?: string; label?: string; icon?: string }> } | undefined;
+      const chipConfig = facilitiesOverride?.chips?.[type];
+      if (chipConfig) {
+        return {
+          TH: chipConfig.label || defaultConfig.TH,
+          EN: defaultConfig.EN,
+          icon: chipConfig.icon || defaultConfig.icon,
+          color: chipConfig.color || defaultConfig.color,
+        };
+      }
+    }
+  } catch (e) {
+    // Fallback to default
+  }
+  
+  return defaultConfig;
+};

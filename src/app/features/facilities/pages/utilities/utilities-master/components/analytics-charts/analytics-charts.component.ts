@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePicker } from 'primeng/datepicker';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
-import { MeterType, METER_TYPE_LABELS } from '@core/models/meter.model';
+import { MeterType, METER_TYPE_LABELS, getMeterTypeConfigSync } from '@core/models/meter.model';
 import { getChartPalette, getChartPaletteWithAlpha } from '@core/utils/chart-colors';
 
 Chart.register(...registerables);
@@ -204,7 +204,7 @@ export class AnalyticsChartsComponent implements OnInit {
       ac: 3
     };
 
-    const typeInfo = METER_TYPE_LABELS[meterType];
+    const typeInfo = getMeterTypeConfigSync(meterType);
     const typeIndex = meterTypeIndexMap[meterType];
     return {
       labels: months,
